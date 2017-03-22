@@ -1,0 +1,8 @@
+Hauteur: 6
+Longueur: 5
+Grille:
+0 0 4
+.
+0 3 2
+.
+2 0 2
