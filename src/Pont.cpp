@@ -1,20 +1,17 @@
 #include "../inc/Pont.hpp"
 
-//Constructeur lorsque l'on va créer un pont entre 2 iles
-// ! Utiliser un Accesseur pour le Boolean => Preferable !
+// Constructeur lorsque l'on va créer un pont entre 2 iles
 Pont::Pont(Ile ile1, Ile ile2, int nombre){
     *_ile1= ile1;
     *_ile2= ile2;
-    if( nombre >= 0 && nombre <= 2)
-        _nombre = nombre;
+    this->_nombre = nombre;
 }
 
 Pont::Pont(Ile* ile1, Ile* ile2, int nombre){
 
     this->_ile1 = ile1;
     this->_ile2 = ile2;
-    if( nombre >= 0 && nombre <= 2)
-        _nombre = nombre;
+    this->_nombre = nombre;
 
 }
 
@@ -45,21 +42,19 @@ void Pont::setIle2(Ile* i) {
 }
 
 void Pont::setNombre(int n) {
-    if( n >= 0 && n <= 2)
-        _nombre= n;
-    else _nombre =0;
+    _nombre = n;
 }
 
 void Pont::setEstVertical(){
-    if ( _ile1->getX() == _ile2->getX() ){
+    if ( _ile1->getX() == _ile2->getX() ) {
         _est_vertical = true;
     }
-    else{
+    else {
         _est_vertical = false;
     }
+    std::cout<<_ile1->getX()<<_ile1->getY()<<_ile2->getX()<<_ile2->getY()<<_est_vertical<<"\n";
 }
 
-// METHODE majComposantesConnexes
 // Correction pb: On va comparer uniquement les hauteurs des chefs comme ça pas de parcours
 void Pont::majComposantesConnexes(){
      if( _ile1->getChef()->getHauteur() >= _ile2->getChef()->getHauteur() ){

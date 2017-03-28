@@ -21,7 +21,7 @@ int main(int argc, char const *argv[]) {
     for (int i = 0; i < grille.getN(); i++) {
       for (int j = 0; j < grille.getM(); j++) {
       if (grille.getUneIleOuUnPont(i,j).getIle() != NULL) {
-	std::cout<<grille.getUneIleOuUnPont(i,j).getIle()->getVal()<<" "<<grille.getUneIleOuUnPont(i,j).getIle()->getVoisinsPossibles().size()<<std::endl;
+	std::cout<<grille.getUneIleOuUnPont(i,j).getIle()->getVal()<<" "<<grille.getUneIleOuUnPont(i,j).getIle()->getX()<<" "<<grille.getUneIleOuUnPont(i,j).getIle()->getY()<<" "<<grille.getUneIleOuUnPont(i,j).getIle()->getVoisinsPossibles().size()<<std::endl;
       }
     }
   }

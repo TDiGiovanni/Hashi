@@ -83,7 +83,7 @@ std::string Grille::enleverEspace(std::string str) {
 std::string Grille::champDeLecture(std::istream& in) {
     std::string champ;
     int lecture = in.get();
-    // Lecture de la ligne jusqu’au prochain : ou bien la fin de la ligne
+    // Lecture de la ligne jusqu’au prochain ':' ou bien la fin de la ligne
     while (lecture != ':' && lecture != '\n' && in)
     {
         champ += lecture;
@@ -111,7 +111,7 @@ void Grille::ignoreChars(std::istream& in, std::string chars) {
 
 void Grille::lecture(std::istream& in) {
     std::string champ;
-    int x,y,val;
+    int x, y, val;
     Ile* ile;
     bool estCree = false;
 
@@ -147,13 +147,13 @@ void Grille::lecture(std::istream& in) {
         }
 
         if (champ == "Grille") {
-	    in.seekg(1,std::ios_base::cur);
+	  in.seekg(1,std::ios_base::cur);
 
-	    while(champ.size()) {
+	  while (champ.size()) {
 
-	        in >> y;
-	        in >> x;
-	        in >> val;
+	      in >> x;
+	      in >> y;
+	      in >> val;
 
 	        if ( ((unsigned int) x < _m) && ((unsigned int) y < _n) && (y >= 0) && (x >= 0) && (val >= 1) && (val <= 8) ) {
 		    ile = new Ile(val,x,y);
@@ -168,7 +168,7 @@ void Grille::lecture(std::istream& in) {
 		champ = champDeLecture(in);
 	    }
 	}
-    } while(champ.size());
+    } while (champ.size());
 }
 
 
@@ -181,14 +181,14 @@ void Grille::affichage (std::ostream& sortie) const {
   for (size_t i = 0; i < _n; i++) {
     sortie << "|";
     for (size_t j = 0; j < _m; j++) {
-      IleOuPont grille = getUneIleOuUnPont(i,j);
-      if( grille.getIle() != NULL) {
+      IleOuPont grille = getUneIleOuUnPont(j,i);
+      if (grille.getIle() != NULL) {
         sortie << grille.getIle()->getVal() << " ";
       }
       else {
 	if ( grille.getPont() != NULL ) {
 	  if ( grille.getPont()->getNombre() == 1 ) {
-	    if ( grille.getPont()->getEstVertical() ) {
+	    if ( !(grille.getPont()->getEstVertical()) ) {
 	      sortie << "--";
 	    }
 	    else {
@@ -196,7 +196,7 @@ void Grille::affichage (std::ostream& sortie) const {
 	    }
 	  }
 	  else {
-	    if ( grille.getPont()->getEstVertical() ) {
+	    if ( !(grille.getPont()->getEstVertical()) ) {
 	      sortie << "==";
 	    }
 	    else {
@@ -299,7 +299,7 @@ void Grille::majVoisinsReels(Pont* pont) {
   }
 
   // Cas où le pont est vertical
-  if ( !(pont->getEstVertical()) ) {
+  if ( pont->getEstVertical() ) {
     for (int i = std::min(pont->getIle1()->getY(),pont->getIle2()->getY())+1; i < std::max(pont->getIle1()->getY(), pont->getIle2()->getY()); i++) {
       // On cherche la première ile à droite du pont
       int j = i;
@@ -390,16 +390,15 @@ void Grille::reglesPonts(Ile* ile){
     for(size_t i = 0 ; i < ile->getVoisinsPossibles().size() ; i++) {
       ile2 = ile->getVoisinsPossibles().at(i);
       
-      
+      // Dans la suite, "getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()" correspond à ile2
       creerPont(ile, getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(), 2);
       
       ile->setPontsPlaces(ile->getPontsPlaces()+2);
-      ile2.setPontsPlaces(ile2.getPontsPlaces()+2);
+      getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setPontsPlaces(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces()+2);
 
       // On vérifie si ile2 est terminée
-      if ( ile2.getPontsPlaces() == ile2.getVal() ) {
-	ile2.setEstRelie(true);
-	ile->setVoisinsPossibles()
+      if ( getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces() == getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getVal() ) {
+	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setEstRelie(true);
       }
     }
     ile->setEstRelie(true);
@@ -414,12 +413,11 @@ void Grille::reglesPonts(Ile* ile){
       creerPont(ile, getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(), 1);
       
       ile->setPontsPlaces(ile->getPontsPlaces()+1);
-      ile2.setPontsPlaces(ile2.getPontsPlaces()+1);
+      getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setPontsPlaces(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces()+1);
 
       // On vérifie si ile2 est "terminée"
-      if ( ile2.getPontsPlaces() == ile2.getVal() ) {
-	ile2.setEstRelie(true);
-	ile->supprimerUneCaseVoisinsPossibles(i);
+      if ( getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces() == getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getVal() ) {
+	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setEstRelie(true);
       }
     }
 
@@ -431,12 +429,11 @@ void Grille::reglesPonts(Ile* ile){
 	creerPont(ile, getUneIleOuUnPont(ile2.getX(), ile2.getY()).getIle(), 2);
 	
 	ile->setPontsPlaces(ile->getPontsPlaces()+1);
-	ile2.setPontsPlaces(ile2.getPontsPlaces()+1);
+	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setPontsPlaces(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces()+1);
 
 	// On vérifie si ile2 est "terminée"
-	if ( ile2.getPontsPlaces() == ile2.getVal() ) {
-	  ile2.setEstRelie(true);
-	  ile->supprimerUneCaseVoisinsPossibles(i);
+	if ( getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces() == getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getVal() ) {
+	  getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setEstRelie(true);
 	}
       }
       ile->setEstRelie(true);
@@ -448,7 +445,7 @@ void Grille::creerPont(Ile* ile1, Ile* ile2, int nbr_ponts) {
     Pont* pont = new Pont(ile1, ile2, nbr_ponts);
     pont->setEstVertical();
     
-    if ( pont->getEstVertical() == true ) {
+    if ( pont->getEstVertical() == false ) {
         for (int i = std::min(ile1->getX(),ile2->getX())+1; i < std::max(ile2->getX(),ile1->getX()); i++) {
             // On lie chaque case au pont créé
             _objets_presents[i][ile1->getY()].setPont(pont);

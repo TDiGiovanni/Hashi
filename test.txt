@@ -1,8 +1,10 @@
-Hauteur: 6
+Hauteur: 7
 Longueur: 5
 Grille:
 0 0 4
 .
-0 3 2
+0 3 3
 .
 2 0 2
+.
+2 3 1
