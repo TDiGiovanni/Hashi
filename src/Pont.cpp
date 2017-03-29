@@ -52,7 +52,6 @@ void Pont::setEstVertical(){
     else {
         _est_vertical = false;
     }
-    std::cout<<_ile1->getX()<<_ile1->getY()<<_ile2->getX()<<_ile2->getY()<<_est_vertical<<"\n";
 }
 
 // Correction pb: On va comparer uniquement les hauteurs des chefs comme ça pas de parcours

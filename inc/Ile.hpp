@@ -54,7 +54,8 @@ public:
     void affectation(Ile* ile);
 
     //Methodes
-    void supprimerUneCaseVoisinsPossibles(size_t i);
+    void supprimerUneCaseVoisinsPossibles(size_t);
+    void supprimerUneCaseVoisinsPossibles(Ile*);
     void toString();
 
 };

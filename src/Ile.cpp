@@ -116,15 +116,21 @@ void Ile::affectation(Ile* ile){
 
 // Méthodes
 void Ile::supprimerUneCaseVoisinsPossibles(size_t i){
-    // Supprimer une case du vector des voisins possibles
-    // Permet de supprimer un voisin possibles car il n'est plus possible
-    if ( i >= 0 && i < _voisins_possibles.size()){
-        _voisins_possibles.erase(_voisins_possibles.begin() + i);
+    if ( i >= 0 && i < _voisins_possibles.size() ) {
+        _voisins_possibles.erase(_voisins_possibles.begin()+i);
     }
 }
 
-// Méthode toString
+void Ile::supprimerUneCaseVoisinsPossibles(Ile* ile){
+  for (size_t i = 0; i < _voisins_possibles.size(); i++) {
+    if (_voisins_possibles[i].getX() == ile->getX()
+     && _voisins_possibles[i].getY() == ile->getY()) {
+      _voisins_possibles.erase(_voisins_possibles.begin()+i);
+    }
+  }
+}
 
-void Ile::toString(){
+// Méthode d'affichage
+void Ile::toString() {
   std::cout<<"Valeur: "<<_val<<", X: "<<_abscisse<<", Y: "<<_ordonnee<<std::endl;
 }

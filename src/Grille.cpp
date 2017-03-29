@@ -173,50 +173,50 @@ void Grille::lecture(std::istream& in) {
 
 
 void Grille::affichage (std::ostream& sortie) const {
-    sortie << "+";
+  sortie << "+";
   for (size_t i = 1; i <= 2*_m; i++) {
       sortie << "-";
   }
-  sortie<< "+ \n";
+  sortie<<"+ \n";
   for (size_t i = 0; i < _n; i++) {
-    sortie << "|";
+    sortie<<"|";
     for (size_t j = 0; j < _m; j++) {
-      IleOuPont grille = getUneIleOuUnPont(j,i);
+      IleOuPont grille = getUneIleOuUnPont(i,j);
       if (grille.getIle() != NULL) {
-        sortie << grille.getIle()->getVal() << " ";
+        sortie<<grille.getIle()->getVal()<<" ";
       }
       else {
 	if ( grille.getPont() != NULL ) {
 	  if ( grille.getPont()->getNombre() == 1 ) {
 	    if ( !(grille.getPont()->getEstVertical()) ) {
-	      sortie << "--";
+	      sortie<<"--";
 	    }
 	    else {
-	      sortie << "| ";
+	      sortie<<"| ";
 	    }
 	  }
 	  else {
 	    if ( !(grille.getPont()->getEstVertical()) ) {
-	      sortie << "==";
+	      sortie<<"==";
 	    }
 	    else {
-	      sortie << "||";
+	      sortie<<"||";
 	    }
 	  }
 	}
 	else {
-	  sortie << ". ";
+	  sortie<<". ";
 	}
       }
     }
-    sortie <<"| \n";
+    sortie<<"| \n";
   }
 
-  sortie << "+";
+  sortie<<"+";
   for (size_t i = 1; i <= 2*_m; i++) {
     sortie << "-";
   }
-  sortie<< "+ \n";
+  sortie<<"+ \n";
 }
 
 // Méthode pour récupérer les voisins possibles de chaque ile
@@ -280,35 +280,17 @@ void Grille::majVoisinsReels(Pont* pont) {
   pont->getIle1()->setUnVoisinReel(pont->getIle2());
   pont->getIle2()->setUnVoisinReel(pont->getIle1());
 
-  // Dans le cas où le pont est double, on supprime ile1 des voisins possibles de ile2 et inversément
-  if( pont->getNombre() == 2 ) {
-    for (size_t i = 0; i < pont->getIle1()->getVoisinsPossibles().size(); i++) {
-      if ( (pont->getIle1()->getVoisinsPossibles()[i].getX() == pont->getIle2()->getX())
-	   && (pont->getIle1()->getVoisinsPossibles()[i].getY() == pont->getIle2()->getY()) ) {
-	// Effacer la case si elle correspond
-	pont->getIle1()->supprimerUneCaseVoisinsPossibles(i);
-      }
-    }
-    for (size_t i = 0 ; i < pont->getIle2()->getVoisinsPossibles().size(); i++) {
-      if ( (pont->getIle2()->getVoisinsPossibles()[i].getX() == pont->getIle1()->getX())
-	   && (pont->getIle2()->getVoisinsPossibles()[i].getY() == pont->getIle1()->getY()) ) {
-	// Effacer la case si elle correspond
-	pont->getIle2()->supprimerUneCaseVoisinsPossibles(i);
-      }
-    }
-  }
-
   // Cas où le pont est vertical
   if ( pont->getEstVertical() ) {
     for (int i = std::min(pont->getIle1()->getY(),pont->getIle2()->getY())+1; i < std::max(pont->getIle1()->getY(), pont->getIle2()->getY()); i++) {
       // On cherche la première ile à droite du pont
-      int j = i;
+      int j = pont->getIle1()->getX();
       while ( (j < getM()) && (getUneIleOuUnPont(j,i).getIle() == NULL) ) {
 	j++;
       }
       
       // On cherche la première ile à gauche du pont
-      int k = i;
+      int k = pont->getIle1()->getX();
       while( (k >= 0) && (getUneIleOuUnPont(k,i).getIle() == NULL) ) {
 	k--;
       }
@@ -337,32 +319,32 @@ void Grille::majVoisinsReels(Pont* pont) {
   else {
     for (int i = std::min(pont->getIle1()->getX(),pont->getIle2()->getX())+1; i < std::max(pont->getIle1()->getX(), pont->getIle2()->getX()); i++) {
       // On cherche la première ile au dessus du pont
-      int j = i;
-      while( (j >= 0) && (getUneIleOuUnPont(i,j).getIle() == NULL) ) {
+      int j = pont->getIle1()->getY();
+      while( (j < getN()) && (getUneIleOuUnPont(i,j).getIle() == NULL) ) {
 	j++;
       }
 
       // On cherche la première ile en dessous du pont
-      int k = 0;
-      while( (k < getN()) && (getUneIleOuUnPont(i,k).getIle() == NULL) ) {
+      int k = pont->getIle1()->getY();
+      while( (k >= 0) && (getUneIleOuUnPont(i,k).getIle() == NULL) ) {
 	k--;
       }
 
       // Si il existe bien une ile au dessus et en dessous, on va supprimer l'un des voisins possibles de l'autre
-      if( (getUneIleOuUnPont(j,i).getIle() != NULL) && (getUneIleOuUnPont(k,i).getIle() != NULL) ) {
-	for (size_t l = 0; l < getUneIleOuUnPont(k,i).getIle()->getVoisinsPossibles().size(); l++) {
-	  if ( getUneIleOuUnPont(k,i).getIle()->getVoisinsPossibles()[l].getY() == getUneIleOuUnPont(j,i).getIle()->getY()
-	       && getUneIleOuUnPont(k,i).getIle()->getVoisinsPossibles()[l].getX() == getUneIleOuUnPont(j,i).getIle()->getX() ) {
+      if( (getUneIleOuUnPont(i,j).getIle() != NULL) && (getUneIleOuUnPont(i,k).getIle() != NULL) ) {
+	for (size_t l = 0; l < getUneIleOuUnPont(i,k).getIle()->getVoisinsPossibles().size(); l++) {
+	  if ( getUneIleOuUnPont(i,k).getIle()->getVoisinsPossibles()[l].getY() == getUneIleOuUnPont(i,j).getIle()->getY()
+	       && getUneIleOuUnPont(i,k).getIle()->getVoisinsPossibles()[l].getX() == getUneIleOuUnPont(i,j).getIle()->getX() ) {
 	    // Effacer la case des voisins possibles de k si elle correspond bien à l'ile j
-	    getUneIleOuUnPont(k,i).getIle()->supprimerUneCaseVoisinsPossibles(l);
+	    getUneIleOuUnPont(i,k).getIle()->supprimerUneCaseVoisinsPossibles(l);
 	  }
 	}
 	
-	for (size_t l = 0; l < getUneIleOuUnPont(k,i).getIle()->getVoisinsPossibles().size(); l++) {
-	  if ( getUneIleOuUnPont(j,i).getIle()->getVoisinsPossibles()[l].getY() == getUneIleOuUnPont(k,i).getIle()->getY()
-	       && getUneIleOuUnPont(j,i).getIle()->getVoisinsPossibles()[l].getX() == getUneIleOuUnPont(k,i).getIle()->getX() ) {
+	for (size_t l = 0; l < getUneIleOuUnPont(i,k).getIle()->getVoisinsPossibles().size(); l++) {
+	  if ( getUneIleOuUnPont(i,j).getIle()->getVoisinsPossibles()[l].getY() == getUneIleOuUnPont(i,k).getIle()->getY()
+	       && getUneIleOuUnPont(i,j).getIle()->getVoisinsPossibles()[l].getX() == getUneIleOuUnPont(i,k).getIle()->getX() ) {
 	    // Effacer la case des voisins possibles de j si elle correspond bien à l'ile k
-	    getUneIleOuUnPont(j,i).getIle()->supprimerUneCaseVoisinsPossibles(l);
+	    getUneIleOuUnPont(i,j).getIle()->supprimerUneCaseVoisinsPossibles(l);
 	  }
 	}
       }
@@ -385,9 +367,9 @@ void Grille::reglesPonts(Ile* ile){
   Ile ile2;
 
   // Règle 1: si Val_restante = 2 * Nb_voisins_possibles, alors doubles ponts partout
-  if( (!(ile->getRelie())) && ((unsigned int) (ile->getVal() - ile->getPontsPlaces()) == 2*(ile->getVoisinsPossibles().size())) ) {
+  if ( (!(ile->getRelie())) && ((unsigned int) (ile->getVal() - ile->getPontsPlaces()) == 2*(ile->getVoisinsPossibles().size())) ) {
     
-    for(size_t i = 0 ; i < ile->getVoisinsPossibles().size() ; i++) {
+    for (size_t i = 0; i < ile->getVoisinsPossibles().size(); i++) {
       ile2 = ile->getVoisinsPossibles().at(i);
       
       // Dans la suite, "getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()" correspond à ile2
@@ -400,6 +382,8 @@ void Grille::reglesPonts(Ile* ile){
       if ( getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces() == getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getVal() ) {
 	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setEstRelie(true);
       }
+      // On supprime ile des voisins possibles de ile2, puisqu'on a placé des ponts doubles
+      getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->supprimerUneCaseVoisinsPossibles(ile);
     }
     ile->setEstRelie(true);
   }
