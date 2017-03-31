@@ -1,15 +1,15 @@
 #include "../inc/Ile.hpp"
 
 // Constructeurs
-Ile::Ile(): _val(0), _abscisse(0), _ordonnee(0), _ponts_places(0), _est_relie(false) // Constructeur par défaut
+Ile::Ile(): _val(0), _abscisse(0), _ordonnee(0), _ponts_places(0), _est_resolu(false) // Constructeur par défaut
 {}
 
 Ile::Ile(int val, int x, int y):
-  _val(val), _abscisse(x), _ordonnee(y), _ponts_places(0), _est_relie(false)
+  _val(val), _abscisse(x), _ordonnee(y), _ponts_places(0), _est_resolu(false)
 {}
 
 Ile::Ile(int val, int x, int y, int p_p, std::vector<Ile> v_p, std::vector<Ile> v_r, bool est_r):
-_val(val), _abscisse(x), _ordonnee(y), _ponts_places(p_p), _voisins_possibles(v_p), _voisins_reels(v_r), _est_relie(est_r)
+_val(val), _abscisse(x), _ordonnee(y), _ponts_places(p_p), _voisins_possibles(v_p), _voisins_reels(v_r), _est_resolu(est_r)
 {}
 
 // Accesseurs en lecture
@@ -37,8 +37,8 @@ std::vector<Ile> Ile::getVoisinsReels() {
     return _voisins_reels;
 }
 
-bool Ile::getRelie() {
-    return _est_relie;
+bool Ile::getResolu() {
+    return _est_resolu;
 }
 
 int Ile::getHauteur(){
@@ -74,47 +74,47 @@ void Ile::setPontsPlaces(int n) {
     _ponts_places = n;
 }
 
-void Ile::setUnVoisinPossible(Ile ile){
+void Ile::setUnVoisinPossible(Ile ile) {
     _voisins_possibles.push_back(ile);
 }
 
-void Ile::setUnVoisinPossible(Ile* ile){
+void Ile::setUnVoisinPossible(Ile* ile) {
     _voisins_possibles.push_back(*ile);
 }
 
-void Ile::setEstRelie(bool r) {
-    _est_relie = r;
+void Ile::setEstResolu(bool r) {
+    _est_resolu = r;
 }
 
-void Ile::setUnVoisinReel(Ile ile){
+void Ile::setUnVoisinReel(Ile ile) {
     _voisins_reels.push_back(ile);
 }
 
-void Ile::setUnVoisinReel(Ile* ile){
+void Ile::setUnVoisinReel(Ile* ile) {
     _voisins_reels.push_back(*ile);
 }
 
-void Ile::setHauteur(int h){
+void Ile::setHauteur(int h) {
     _hauteur = h;
 }
 
-void Ile::setPere(Ile* ile){
+void Ile::setPere(Ile* ile) {
     _pere = ile;
 }
 
 
-// SURCHARGE AFFECTATION par méthode
-void Ile::affectation(Ile* ile){
+// Surcharge affectation par méthode
+void Ile::affectation(Ile* ile) {
     this->_val= ile->getVal();
     this->_abscisse= ile->getX();
     this->_ordonnee= ile->getY();
     this->_ponts_places= ile->getPontsPlaces();
     this->_voisins_possibles= ile->getVoisinsPossibles();
     this->_voisins_reels= ile->getVoisinsReels();
-    this->_est_relie= ile->getRelie();
+    this->_est_resolu= ile->getResolu();
 }
 
-// Méthodes
+// Méthodes de suppression
 void Ile::supprimerUneCaseVoisinsPossibles(size_t i){
     if ( i >= 0 && i < _voisins_possibles.size() ) {
         _voisins_possibles.erase(_voisins_possibles.begin()+i);
@@ -128,6 +128,16 @@ void Ile::supprimerUneCaseVoisinsPossibles(Ile* ile){
       _voisins_possibles.erase(_voisins_possibles.begin()+i);
     }
   }
+}
+
+// Vérifie si l'ile existe déjà dans les voisins réels
+bool Ile::dejaVoisin(Ile* ile) {
+  for (unsigned int r = 0; r < _voisins_reels.size(); r++) {
+    if (ile == &(_voisins_reels.at(r)))
+      return true;
+  }
+
+  return false;
 }
 
 // Méthode d'affichage

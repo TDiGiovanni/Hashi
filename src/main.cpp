@@ -19,25 +19,28 @@ int main(int argc, char const *argv[]) {
     grille.RecupVoisinsPossibles();
 
     std::cout<<"Avant:\n";
-    for (int i = 0; i < grille.getN(); i++) {
-      for (int j = 0; j < grille.getM(); j++) {
+    for (int i = 0; i < grille.getHauteur(); i++) {
+      for (int j = 0; j < grille.getLongueur(); j++) {
       if (grille.getUneIleOuUnPont(i,j).getIle() != NULL) {
 	std::cout<<"Val:"<<grille.getUneIleOuUnPont(i,j).getIle()->getVal()<<" X:"<<grille.getUneIleOuUnPont(i,j).getIle()->getX()<<" Y:"<<grille.getUneIleOuUnPont(i,j).getIle()->getY()<<" Vp:"<<grille.getUneIleOuUnPont(i,j).getIle()->getVoisinsPossibles().size()<<std::endl;
       }
     }
   }
+    
     grille.tracerPonts();
 
     std::cout<<"Après:\n";
-    for (int i = 0; i < grille.getN(); i++) {
-      for (int j = 0; j < grille.getM(); j++) {
+    for (int i = 0; i < grille.getHauteur(); i++) {
+      for (int j = 0; j < grille.getLongueur(); j++) {
       if (grille.getUneIleOuUnPont(i,j).getIle() != NULL) {
-	std::cout<<"Val:"<<grille.getUneIleOuUnPont(i,j).getIle()->getVal()<<" Vp:"<<grille.getUneIleOuUnPont(i,j).getIle()->getVoisinsPossibles().size()<<" Pp:"<<grille.getUneIleOuUnPont(i,j).getIle()->getPontsPlaces()<<std::endl;
+	std::cout<<"Val:"<<grille.getUneIleOuUnPont(i,j).getIle()->getVal()<<" Pp:"<<grille.getUneIleOuUnPont(i,j).getIle()->getPontsPlaces()<<std::endl;
       }
     }
   }
 
     grille.affichage(std::cout);
+
+    std::cout<<grille.getUneIleOuUnPont(0,3).getIle()->getVal();
 
     return 0;
 }

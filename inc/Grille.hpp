@@ -7,55 +7,54 @@
 
 class Grille{
 private:
-    unsigned int _n; //Hauteur
-    unsigned int _m; //Longueur
-    // Car on a une grille de type nxm
-    IleOuPont** _objets_presents; // Vector à 2 dimensions des iles ou des ponts dans la grille
-    bool _est_resolu;
+    unsigned int _hauteur_max; // Hauteur donnée dans le fichier texte
+    unsigned int _longueur_max; // Longueur donnée dans le fichier texte
+    IleOuPont** _objets_presents; // Vecteur à 2 dimensions des iles ou des ponts dans la grille
+  bool _est_resolu; // Vrai si toutes les iles sont résolues
     int _nbre_composantes_connexes;
 
 public:
-    //CONSTRUCTEURS
+    // Constructeur
     Grille(); // Par défaut
 
-    //DESTRUCTEUR
+    // Destructeur
     ~Grille();
 
-    //ACCESSEURS LECTURE
-    int getN() const;
-    int getM() const;
+    // Accesseurs lecture
+    int getHauteur() const;
+    int getLongueur() const;
     IleOuPont** getIlesOuPonts() const;
-    IleOuPont getUneIleOuUnPont(int x, int y) const;
+    IleOuPont getUneIleOuUnPont(int, int) const;
     bool getEstResolu();
     int getNbreComposantesConnexes();
 
-    //ACCESSEURS ECRITURE
-    void setN(int n);
-    void setM(int m);
-    void setUneIleOuUnPont(IleOuPont une_ile_ou_un_pont, int x, int y);
+    // Accesseurs écriture
+    void setHauteur(int);
+    void setLongueur(int);
+    void setUneIleOuUnPont(IleOuPont, int, int);
     void setEstResolu();
 
-    //Choisir entre les deux suivants:
-    void setNbreComposanteConnexes( int nbre); // Soit dans la fonction on mettra setNbreComposanteConnexes( _nbre_composantes_connexes -1)
-    void setNbreComposanteConnexes(); // Le fera directement : Au choix
+    // Choisir entre les deux méthodes suivantes:
+    void setNbreComposanteConnexes(int); // Soit dans la fonction on mettra setNbreComposanteConnexes( _nbre_composantes_connexes -1)
+    void setNbreComposanteConnexes(); // Le fera directement: au choix
 
 
 
-    //METHODES
+    // Méthodes
     // Construire la Grille
-    std::string enleverEspace(std::string str);
-    std::string champDeLecture(std::istream& in);
-    void ignoreChars(std::istream& in, std::string chars);
-    void lecture(std::istream& is); // à partir du fichier reconstruit la grille
+    std::string enleverEspace(std::string);
+    std::string champDeLecture(std::istream&);
+    void ignoreChars(std::istream&, std::string);
+  void lecture(std::istream&); // Reconstruit la grille à partir du fichier
     // Affichage
-    void affichage(std::ostream&) const;// affichage sur un flux de sortie
+    void affichage(std::ostream&) const; // Affichage sur un flux de sortie
 
     // Voisins Iles
     void RecupVoisinsPossibles(); // Récupère les voisins possibles de chaque ile
-    void majVoisinsReels(Pont* pont); //Méthode de màj quand on crée un pont
+    void majVoisinsReels(Pont*); // Méthode de màj quand on crée un pont
     void tracerPonts();
-    void reglesPonts(Ile* ile); // Enumération des cas possibles
-    void creerPont(Ile* ile1, Ile* ile2, int nbr_ponts);
+    void reglesPonts(Ile*); // Enumération des cas possibles
+    void creerPont(Ile*, Ile*, int);
 };
 
-#endif // _GRILLE_H
+#endif
