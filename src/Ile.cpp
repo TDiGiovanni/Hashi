@@ -41,7 +41,7 @@ bool Ile::getResolu() {
     return _est_resolu;
 }
 
-int Ile::getHauteur(){
+int Ile::getHauteur() {
     return _hauteur;
 }
 
@@ -49,11 +49,12 @@ Ile* Ile::getPere() {
     return _pere;
 }
 Ile* Ile::getChef() {
-    if( this->getPere() == NULL ) {
+    if ( this->_pere == NULL ) {
         return this;
     }
-    else{
-        return this->getPere()->getChef();
+    else {
+      this->_pere = this->_pere->getChef();
+      return _pere;
     }
 }
 

@@ -11,7 +11,9 @@ private:
     unsigned int _longueur_max; // Longueur donnée dans le fichier texte
     IleOuPont** _objets_presents; // Vecteur à 2 dimensions des iles ou des ponts dans la grille
   bool _est_resolu; // Vrai si toutes les iles sont résolues
-    int _nbre_composantes_connexes;
+  int _nbre_composantes_connexes;
+  int _nb_iles;
+  int _nb_iles_resolues;
 
 public:
     // Constructeur
@@ -20,23 +22,25 @@ public:
     // Destructeur
     ~Grille();
 
-    // Accesseurs lecture
-    int getHauteur() const;
-    int getLongueur() const;
-    IleOuPont** getIlesOuPonts() const;
-    IleOuPont getUneIleOuUnPont(int, int) const;
-    bool getEstResolu();
-    int getNbreComposantesConnexes();
-
-    // Accesseurs écriture
-    void setHauteur(int);
-    void setLongueur(int);
-    void setUneIleOuUnPont(IleOuPont, int, int);
-    void setEstResolu();
-
-    // Choisir entre les deux méthodes suivantes:
-    void setNbreComposanteConnexes(int); // Soit dans la fonction on mettra setNbreComposanteConnexes( _nbre_composantes_connexes -1)
-    void setNbreComposanteConnexes(); // Le fera directement: au choix
+  // Accesseurs lecture
+  int getHauteur() const;
+  int getLongueur() const;
+  IleOuPont** getIlesOuPonts() const;
+  IleOuPont getUneIleOuUnPont(int, int) const;
+  bool getEstResolu();
+  // Composantes connexes
+  int getNbreComposantesConnexes();
+  int getNbIles();
+  int getNbIlesResolues();
+  
+  // Accesseurs écriture
+  void setHauteur(int);
+  void setLongueur(int);
+  void setUneIleOuUnPont(IleOuPont, int, int);
+  void setEstResolu();
+  // Composantes connexes
+  void setNbreComposantesConnexes();
+  void unionComposantesConnexes(Ile*, Ile*);
 
 
 

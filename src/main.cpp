@@ -9,38 +9,41 @@ int main(int argc, char const *argv[]) {
     grille.lecture(fichier);
     fichier.close();
     
-    /* Test de l'affichage des ponts
-    Ile* i1 = grille.getUneIleOuUnPont(0,0).getIle();
-    Ile* i2 = grille.getUneIleOuUnPont(2,0).getIle();
-
-    grille.creerPont(i1,grille.getUneIleOuUnPont(2,0).getIle(),1);
-    */
-    
     grille.RecupVoisinsPossibles();
 
     std::cout<<"Avant:\n";
-    for (int i = 0; i < grille.getHauteur(); i++) {
-      for (int j = 0; j < grille.getLongueur(); j++) {
-      if (grille.getUneIleOuUnPont(i,j).getIle() != NULL) {
-	std::cout<<"Val:"<<grille.getUneIleOuUnPont(i,j).getIle()->getVal()<<" X:"<<grille.getUneIleOuUnPont(i,j).getIle()->getX()<<" Y:"<<grille.getUneIleOuUnPont(i,j).getIle()->getY()<<" Vp:"<<grille.getUneIleOuUnPont(i,j).getIle()->getVoisinsPossibles().size()<<std::endl;
+    for (int y = 0; y < grille.getHauteur(); y++) {
+      for (int x = 0; x < grille.getLongueur(); x++) {
+      if (grille.getUneIleOuUnPont(x,y).getIle() != NULL) {
+	std::cout<<"Val: "<<grille.getUneIleOuUnPont(x,y).getIle()->getVal()
+		 <<", X: "<<grille.getUneIleOuUnPont(x,y).getIle()->getX()
+		 <<", Y: "<<grille.getUneIleOuUnPont(x,y).getIle()->getY()
+		 <<", Vp: "<<grille.getUneIleOuUnPont(x,y).getIle()->getVoisinsPossibles().size()<<std::endl;
       }
     }
   }
+    std::cout<<"Composantes connexes: "<<grille.getNbreComposantesConnexes()
+	     <<", Nb d'iles: "<<grille.getNbIles()
+	     <<", Nb d'iles resolues: "<<grille.getNbIlesResolues()<<std::endl<<std::endl;
     
     grille.tracerPonts();
 
     std::cout<<"Après:\n";
-    for (int i = 0; i < grille.getHauteur(); i++) {
-      for (int j = 0; j < grille.getLongueur(); j++) {
-      if (grille.getUneIleOuUnPont(i,j).getIle() != NULL) {
-	std::cout<<"Val:"<<grille.getUneIleOuUnPont(i,j).getIle()->getVal()<<" Pp:"<<grille.getUneIleOuUnPont(i,j).getIle()->getPontsPlaces()<<std::endl;
+    for (int y = 0; y < grille.getHauteur(); y++) {
+      for (int x = 0; x < grille.getLongueur(); x++) {
+      if (grille.getUneIleOuUnPont(x,y).getIle() != NULL) {
+	std::cout<<"Val: "<<grille.getUneIleOuUnPont(x,y).getIle()->getVal()
+		 <<", Vp: "<<grille.getUneIleOuUnPont(x,y).getIle()->getVoisinsPossibles().size()
+		 <<", Pp: "<<grille.getUneIleOuUnPont(x,y).getIle()->getPontsPlaces()
+		 <<", Resolue? "<<grille.getUneIleOuUnPont(x,y).getIle()->getResolu()<<std::endl;
       }
     }
   }
+    std::cout<<"Composantes connexes: "<<grille.getNbreComposantesConnexes()
+	     <<", Nb d'iles: "<<grille.getNbIles()
+	     <<", Nb d'iles resolues: "<<grille.getNbIlesResolues()<<std::endl<<std::endl;
 
     grille.affichage(std::cout);
-
-    std::cout<<grille.getUneIleOuUnPont(0,3).getIle()->getVal();
 
     return 0;
 }
