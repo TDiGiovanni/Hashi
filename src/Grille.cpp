@@ -385,7 +385,6 @@ void Grille::majVoisinsReels(Pont* pont) {
 
 // Méthode qui traverse toute la grille, et fait appel à reglesPonts dès qu'elle trouve une ile. Recommence tant que la grille n'est pas résolue
 void Grille::tracerPonts() {
-  while ( !(_est_resolu) ) {
     for (unsigned int y = 0; y < _hauteur_max; y++) {
       for (unsigned int x = 0; x < _longueur_max; x++) {
 	if (getUneIleOuUnPont(x,y).getIle() != NULL) {
@@ -393,8 +392,6 @@ void Grille::tracerPonts() {
 	}
       }
     }
-    setEstResolu();
-  }
 }
   
 void Grille::reglesPonts(Ile* ile){
