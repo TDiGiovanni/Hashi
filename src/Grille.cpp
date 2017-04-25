@@ -67,6 +67,30 @@ void Grille::setEstResolu() {
     else _est_resolu = false;
 }
 
+void Grille::resoudreIle(Ile* ile, bool r) {
+  if (r) {
+    ile->setEstResolu(r);
+    _nb_iles_resolues++;
+    
+    // On applique les règles sur tous les voisins de l'ile récemment résolue, car le nombre de voisins possibles pour ces iles a changé. On en profite pour vider le vecteur de voisins possibles de l'ile résolue.
+    unsigned int v = 0;
+    while (v < ile->getVoisinsPossibles().size()) {
+      reglesPonts(getUneIleOuUnPont(ile->getVoisinsPossibles()[v].getX(),ile->getVoisinsPossibles()[v].getY()).getIle());
+      ile->supprimerUneCaseVoisinsPossibles(v);
+    }
+  }
+}
+
+void Grille::supprimerUnVoisinPossible(Ile* ile, size_t i) {
+  ile->supprimerUneCaseVoisinsPossibles(i);
+  reglesPonts(ile);
+}
+
+void Grille::supprimerUnVoisinPossible(Ile* ile, Ile* voisin) {
+  ile->supprimerUneCaseVoisinsPossibles(voisin);
+  reglesPonts(ile);
+}
+
 void Grille::setNbreComposantesConnexes() {
     if( _nbre_composantes_connexes > 1 )
         _nbre_composantes_connexes = _nbre_composantes_connexes - 1;
@@ -419,16 +443,12 @@ void Grille::reglesPonts(Ile* ile){
       // On vérifie si ile2 est "terminée"
       if ( !(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getResolu()) &&
 	   getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces() == getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getVal() ) {
-	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setEstResolu(true);	
-	_nb_iles_resolues++;
+	resoudreIle(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(),true);
       }
-      // On supprime ile des voisins possibles de ile2, puisqu'on a placé des ponts doubles et inversément
-      getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->supprimerUneCaseVoisinsPossibles(ile);
-      ile->supprimerUneCaseVoisinsPossibles(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle());
-      i--;
+      // On supprime ile des voisins possibles de ile2, puisqu'on a placé des ponts doubles
+      supprimerUnVoisinPossible(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(),ile);
     }
-    ile->setEstResolu(true);
-    _nb_iles_resolues++;
+    resoudreIle(ile,true);
   }
   
   // Règle 2: si (Val_restante / 2) + 1 = Nb_voisins_possibles, alors simple pont partout (fonctionne seulement quand Val_restante est impaire)
@@ -440,11 +460,11 @@ void Grille::reglesPonts(Ile* ile){
       // S'ils sont déjà reliés, on crée un pont double (et on supprime ile des voisins possibles de ile2 et inversément)
       if ( ile->dejaVoisin(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()) ) {
 	creerPont(ile, getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(), 2);
-	ile->setPontsPlaces(ile->getPontsPlaces()+2);
-	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setPontsPlaces(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces()+2);
-	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->supprimerUneCaseVoisinsPossibles(ile);
-	ile->supprimerUneCaseVoisinsPossibles(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle());
-	i--;
+	ile->setPontsPlaces(ile->getPontsPlaces()+1);
+	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setPontsPlaces(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces()+1);
+	supprimerUnVoisinPossible(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(),ile);
+	supprimerUnVoisinPossible(ile,getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle());
+	i--; // Décrémentation car on réduit la taille du vecteur de voisins possibles
       }
       // Autrement, on crée un pont simple
       else {
@@ -457,15 +477,13 @@ void Grille::reglesPonts(Ile* ile){
       // On vérifie si ile2 est "terminée"
       if ( !(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getResolu()) &&
 	   getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces() == getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getVal() ) {
-	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setEstResolu(true);
-	_nb_iles_resolues++;
+	resoudreIle(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(),true);
       }
     }
 
     // On vérifie si ile est "terminée"
     if ( ile->getVal() == ile->getPontsPlaces() ) {
-      ile->setEstResolu(true);
-      _nb_iles_resolues++;
+      resoudreIle(ile,true);
     }
 
     // Cas particulier suivant la règle 2 où le nombre de voisins possibles est égal à la valeur restante de l'ile
@@ -482,17 +500,15 @@ void Grille::reglesPonts(Ile* ile){
 	// On vérifie si ile2 est "terminée"
 	if ( !(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getResolu()) &&
 	     getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces() == getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getVal() ) {
-	  getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setEstResolu(true);
-	  _nb_iles_resolues++;
+	  resoudreIle(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(),true);
 	}
 
 	// On supprime ile des voisins possibles de ile2 et inversément
-	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->supprimerUneCaseVoisinsPossibles(ile);
-	ile->supprimerUneCaseVoisinsPossibles(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle());
+	supprimerUnVoisinPossible(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(),ile);
+	supprimerUnVoisinPossible(ile,getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle());
 	i--; // On décrémente, car on réduit la taille du vecteur de voisins possibles
       }
-      ile->setEstResolu(true);
-      _nb_iles_resolues++;
+      resoudreIle(ile,true);
     }
   }
 }

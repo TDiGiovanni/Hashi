@@ -42,23 +42,24 @@ public:
   void setNbreComposantesConnexes();
   void unionComposantesConnexes(Ile*, Ile*);
 
-
-
-    // Méthodes
-    // Construire la Grille
-    std::string enleverEspace(std::string);
-    std::string champDeLecture(std::istream&);
-    void ignoreChars(std::istream&, std::string);
+  // Construction de la grille
+  std::string enleverEspace(std::string);
+  std::string champDeLecture(std::istream&);
+  void ignoreChars(std::istream&, std::string);
   void lecture(std::istream&); // Reconstruit la grille à partir du fichier
-    // Affichage
-    void affichage(std::ostream&) const; // Affichage sur un flux de sortie
+  // Affichage
+  void affichage(std::ostream&) const; // Affichage sur un flux de sortie
 
-    // Voisins Iles
-    void RecupVoisinsPossibles(); // Récupère les voisins possibles de chaque ile
-    void majVoisinsReels(Pont*); // Méthode de màj quand on crée un pont
-    void tracerPonts();
-    void reglesPonts(Ile*); // Enumération des cas possibles
-    void creerPont(Ile*, Ile*, int);
+  // Voisins d'Iles
+  void RecupVoisinsPossibles(); // Récupère les voisins possibles de chaque ile
+  void majVoisinsReels(Pont*); // Méthode de màj quand on crée un pont
+  void tracerPonts();
+  void reglesPonts(Ile*); // Enumération des cas possibles
+  void creerPont(Ile*, Ile*, int);
+
+  void resoudreIle(Ile*, bool);
+  void supprimerUnVoisinPossible(Ile*, size_t);
+  void supprimerUnVoisinPossible(Ile*, Ile*);
 };
 
 #endif
