@@ -84,7 +84,14 @@ void Ile::setUnVoisinPossible(Ile* ile) {
 }
 
 void Ile::setEstResolu(bool r) {
+  if (r == true) {
     _est_resolu = r;
+
+    unsigned int i = 0;
+    while (i < _voisins_possibles.size())
+      _voisins_possibles[i].supprimerUneCaseVoisinsPossibles(this);
+      supprimerUneCaseVoisinsPossibles(i);
+  }
 }
 
 void Ile::setUnVoisinReel(Ile ile) {
@@ -139,6 +146,13 @@ bool Ile::dejaVoisin(Ile* ile) {
   }
 
   return false;
+}
+
+// Supprime les iles résolues des voisins possibles
+void Ile::majVoisinsResolus() {
+  for (unsigned int i = 0; i < _voisins_possibles.size(); i++)
+    if ( _voisins_possibles[i].getResolu() )
+      supprimerUneCaseVoisinsPossibles(i);
 }
 
 // Méthode d'affichage

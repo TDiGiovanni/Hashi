@@ -60,6 +60,9 @@ public:
   // Vérifie si une ile existe déjà dans les voisins réels
   bool dejaVoisin(Ile*);
 
+  // Supprime les iles résolues des voisins possibles
+  void majVoisinsResolus();
+
   // Affichage
   void toString();
   
