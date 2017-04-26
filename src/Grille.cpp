@@ -7,10 +7,10 @@ Grille::Grille(): _hauteur_max(0), _longueur_max(0), _objets_presents(0), _est_r
 // Destructeur
 Grille::~Grille() {
   for (size_t x = 0; x < _longueur_max; x++) {
-    delete[] _objets_presents[x];
+    delete(_objets_presents[x]);
   }
   
-  delete[] _objets_presents;
+  delete(_objets_presents);
 }
 
 
@@ -72,10 +72,10 @@ void Grille::resoudreIle(Ile* ile, bool r) {
     ile->setEstResolu(r);
     _nb_iles_resolues++;
     
-    // On applique les règles sur tous les voisins de l'ile récemment résolue, car le nombre de voisins possibles pour ces iles a changé. On en profite pour vider le vecteur de voisins possibles de l'ile résolue.
+    // On applique les règles sur tous les voisins de l'ile récemment résolue, car le nombre de voisins possibles pour ces iles a changé. On en profite pour vider entièrement le vecteur de voisins possibles de l'ile résolue et donc passer son nombre de voisins possibles à 0.
     unsigned int v = 0;
     while (v < ile->getVoisinsPossibles().size()) {
-      reglesPonts(getUneIleOuUnPont(ile->getVoisinsPossibles()[v].getX(),ile->getVoisinsPossibles()[v].getY()).getIle());
+      reglesPonts(ile->getVoisinsPossibles()[v]);
       ile->supprimerUneCaseVoisinsPossibles(v);
     }
   }
@@ -283,7 +283,7 @@ void Grille::RecupVoisinsPossibles() {
 	// Autres cas
 	else {
 	  ile->setUnVoisinPossible(caseActuelle.getIle());
-	  caseActuelle.getIle()->setUnVoisinPossible(*ile);
+	  caseActuelle.getIle()->setUnVoisinPossible(ile);
 	  
 	  ile = caseActuelle.getIle();
 	}
@@ -307,7 +307,7 @@ void Grille::RecupVoisinsPossibles() {
 	// Autres cas
 	else {
 	  ile->setUnVoisinPossible(caseActuelle.getIle());
-	  caseActuelle.getIle()->setUnVoisinPossible(*ile);
+	  caseActuelle.getIle()->setUnVoisinPossible(ile);
 	    
 	  ile = caseActuelle.getIle();
 	}
@@ -346,16 +346,16 @@ void Grille::majVoisinsReels(Pont* pont) {
 	// Si il existe bien une ile à gauche et à droite, on va supprimer l'un des voisins possibles de l'autre
 	if ( (getUneIleOuUnPont(x1,y).getIle() != NULL) && (getUneIleOuUnPont(x2,y).getIle() != NULL) ) {
 	  for (size_t v = 0; v < getUneIleOuUnPont(x2,y).getIle()->getVoisinsPossibles().size(); v++) {
-	    if ( (getUneIleOuUnPont(x2,y).getIle()->getVoisinsPossibles()[v].getX() == getUneIleOuUnPont(x1,y).getIle()->getX())
-		 && (getUneIleOuUnPont(x2,y).getIle()->getVoisinsPossibles()[v].getY() == getUneIleOuUnPont(x1,y).getIle()->getY()) ) {
+	    if ( (getUneIleOuUnPont(x2,y).getIle()->getVoisinsPossibles()[v]->getX() == getUneIleOuUnPont(x1,y).getIle()->getX())
+		 && (getUneIleOuUnPont(x2,y).getIle()->getVoisinsPossibles()[v]->getY() == getUneIleOuUnPont(x1,y).getIle()->getY()) ) {
 	      // Effacer la case des voisins possibles de x2 si elle correspond bien à l'ile x1
 	      getUneIleOuUnPont(x2,y).getIle()->supprimerUneCaseVoisinsPossibles(v);
 	    }
 	  }
 	  
 	  for (size_t v = 0 ; v < getUneIleOuUnPont(x1,y).getIle()->getVoisinsPossibles().size(); v++) {
-	    if ( (getUneIleOuUnPont(x1,y).getIle()->getVoisinsPossibles()[v].getX() == getUneIleOuUnPont(x2,y).getIle()->getX())
-		 && (getUneIleOuUnPont(x1,y).getIle()->getVoisinsPossibles()[v].getY() == getUneIleOuUnPont(x2,y).getIle()->getY()) ){
+	    if ( (getUneIleOuUnPont(x1,y).getIle()->getVoisinsPossibles()[v]->getX() == getUneIleOuUnPont(x2,y).getIle()->getX())
+		 && (getUneIleOuUnPont(x1,y).getIle()->getVoisinsPossibles()[v]->getY() == getUneIleOuUnPont(x2,y).getIle()->getY()) ){
 	      // Effacer la case des voisins possibles de x1 si elle correspond bien à l'ile x2
 	      getUneIleOuUnPont(x1,y).getIle()->supprimerUneCaseVoisinsPossibles(v);
 	    }
@@ -385,16 +385,16 @@ void Grille::majVoisinsReels(Pont* pont) {
 	// Si il existe bien une ile au dessus et en dessous, on va supprimer l'un des voisins possibles de l'autre
 	if( (getUneIleOuUnPont(x,y1).getIle() != NULL) && (getUneIleOuUnPont(x,y2).getIle() != NULL) ) {
 	  for (size_t v = 0; v < getUneIleOuUnPont(x,y2).getIle()->getVoisinsPossibles().size(); v++) {
-	    if ( getUneIleOuUnPont(x,y2).getIle()->getVoisinsPossibles()[v].getY() == getUneIleOuUnPont(x,y1).getIle()->getY()
-		 && getUneIleOuUnPont(x,y2).getIle()->getVoisinsPossibles()[v].getX() == getUneIleOuUnPont(x,y1).getIle()->getX() ) {
+	    if ( getUneIleOuUnPont(x,y2).getIle()->getVoisinsPossibles()[v]->getY() == getUneIleOuUnPont(x,y1).getIle()->getY()
+		 && getUneIleOuUnPont(x,y2).getIle()->getVoisinsPossibles()[v]->getX() == getUneIleOuUnPont(x,y1).getIle()->getX() ) {
 	      // Effacer la case des voisins possibles de y2 si elle correspond bien à l'ile y1
 	      getUneIleOuUnPont(x,y2).getIle()->supprimerUneCaseVoisinsPossibles(v);
 	    }
 	  }
 	  
 	  for (size_t v = 0; v < getUneIleOuUnPont(x,y1).getIle()->getVoisinsPossibles().size(); v++) {
-	    if ( getUneIleOuUnPont(x,y1).getIle()->getVoisinsPossibles()[v].getY() == getUneIleOuUnPont(x,y2).getIle()->getY()
-		 && getUneIleOuUnPont(x,y1).getIle()->getVoisinsPossibles()[v].getX() == getUneIleOuUnPont(x,y2).getIle()->getX() ) {
+	    if ( getUneIleOuUnPont(x,y1).getIle()->getVoisinsPossibles()[v]->getY() == getUneIleOuUnPont(x,y2).getIle()->getY()
+		 && getUneIleOuUnPont(x,y1).getIle()->getVoisinsPossibles()[v]->getX() == getUneIleOuUnPont(x,y2).getIle()->getX() ) {
 	      // Effacer la case des voisins possibles de y1 si elle correspond bien à l'ile y2
 	      getUneIleOuUnPont(x,y1).getIle()->supprimerUneCaseVoisinsPossibles(v);
 	    }
@@ -428,7 +428,7 @@ void Grille::reglesPonts(Ile* ile){
   if ( (!(ile->getResolu())) && ((unsigned int) (ile->getVal() - ile->getPontsPlaces()) == 2*(ile->getVoisinsPossibles().size())) ) {
     
     for (size_t i = 0; i < ile->getVoisinsPossibles().size(); i++) {
-      ile2 = ile->getVoisinsPossibles().at(i);
+      ile2 = *(ile->getVoisinsPossibles().at(i));
       
       // Dans la suite, "getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()" correspond à ile2
       creerPont(ile, getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(), 2);
@@ -455,7 +455,7 @@ void Grille::reglesPonts(Ile* ile){
   if( (!(ile->getResolu())) && ((unsigned int)(ile->getVal() - ile->getPontsPlaces())%2 != 0) && ((((unsigned int)(ile->getVal() - ile->getPontsPlaces()) /2) +1) == ile->getVoisinsPossibles().size()) ) {
     
     for (size_t i = 0; i< ile->getVoisinsPossibles().size(); i++) {
-      ile2 = ile->getVoisinsPossibles().at(i);
+      ile2 = *(ile->getVoisinsPossibles().at(i));
 
       // S'ils sont déjà reliés, on crée un pont double (et on supprime ile des voisins possibles de ile2 et inversément)
       if ( ile->dejaVoisin(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()) ) {
@@ -489,7 +489,7 @@ void Grille::reglesPonts(Ile* ile){
     // Cas particulier suivant la règle 2 où le nombre de voisins possibles est égal à la valeur restante de l'ile
     if ( (!(ile->getResolu())) && (unsigned int)(ile->getVal() - ile->getPontsPlaces()) == (ile->getVoisinsPossibles().size()) ) {
       for (size_t i = 0; i< ile->getVoisinsPossibles().size() ; i++) {
-	ile2 = ile->getVoisinsPossibles().at(i);
+	ile2 = *(ile->getVoisinsPossibles().at(i));
 	
 	creerPont(ile, getUneIleOuUnPont(ile2.getX(), ile2.getY()).getIle(), 2);
 

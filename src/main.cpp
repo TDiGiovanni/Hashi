@@ -18,7 +18,7 @@ int main(int argc, char const *argv[]) {
 	std::cout<<"Val: "<<grille.getUneIleOuUnPont(x,y).getIle()->getVal()
 		 <<", X: "<<grille.getUneIleOuUnPont(x,y).getIle()->getX()
 		 <<", Y: "<<grille.getUneIleOuUnPont(x,y).getIle()->getY()
-		 <<", Vp: "<<grille.getUneIleOuUnPont(x,y).getIle()->getVoisinsPossibles().size()<<std::endl;
+	  <<", Vp: "<<grille.getUneIleOuUnPont(x,y).getIle()->getVoisinsPossibles().size()<<std::endl;
       }
     }
   }

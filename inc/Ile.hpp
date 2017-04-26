@@ -11,8 +11,8 @@ private:
     int _abscisse; // Coordonnées en abscisse de l'ile
     int _ordonnee; // Coordonnées en ordonnée de l'ile
     int _ponts_places; // Nombre de ponts déjà placés
-    std::vector<Ile> _voisins_possibles; // Vecteur des iles qui représente tous les voisins possibles
-    std::vector<Ile> _voisins_reels; // Vecteur des iles qui représentent les voisins placés (ne peut pas excéder la valeur de l'ile)
+    std::vector<Ile*> _voisins_possibles; // Vecteur des iles qui représente tous les voisins possibles
+    std::vector<Ile*> _voisins_reels; // Vecteur des iles qui représentent les voisins placés (ne peut pas excéder la valeur de l'ile)
     bool _est_resolu; // vrai si tous les ponts ont été placés, faux sinon
     int _hauteur;
     Ile* _pere;
@@ -21,15 +21,18 @@ public:
   // Constructeurs
   Ile();
   Ile(int val, int x, int y);
-  Ile(int val, int x, int y, int ponts_places, std::vector<Ile> voisins_possibles, std::vector<Ile> voisins_reels, bool est_relie);
+  Ile(int val, int x, int y, int ponts_places, std::vector<Ile*> voisins_possibles, std::vector<Ile*> voisins_reels, bool est_relie);
+
+  // Destructeur
+   ~Ile();
   
   // Accesseurs lecture
   int getVal();
   int getX();
   int getY();
   int getPontsPlaces();
-  std::vector<Ile> getVoisinsPossibles();
-  std::vector<Ile> getVoisinsReels();
+  std::vector<Ile*> getVoisinsPossibles();
+  std::vector<Ile*> getVoisinsReels();
   bool getResolu();
   // Accesseurs composantes connexes
   int getHauteur();
@@ -41,10 +44,8 @@ public:
   void setX(int);
   void setY(int);
   void setPontsPlaces(int);
-  void setUnVoisinPossible(Ile);
   void setUnVoisinPossible(Ile*);
   void setEstResolu(bool);
-  void setUnVoisinReel(Ile);
   void setUnVoisinReel(Ile*);
   // Accesseurs composantes connexes
   void setHauteur(int);

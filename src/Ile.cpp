@@ -1,16 +1,28 @@
 #include "../inc/Ile.hpp"
 
 // Constructeurs
-Ile::Ile(): _val(0), _abscisse(0), _ordonnee(0), _ponts_places(0), _est_resolu(false) // Constructeur par défaut
+Ile::Ile():
+  _val(0), _abscisse(0), _ordonnee(0), _ponts_places(0), _est_resolu(false) // Constructeur par défaut
 {}
 
 Ile::Ile(int val, int x, int y):
   _val(val), _abscisse(x), _ordonnee(y), _ponts_places(0), _est_resolu(false)
 {}
 
-Ile::Ile(int val, int x, int y, int p_p, std::vector<Ile> v_p, std::vector<Ile> v_r, bool est_r):
+Ile::Ile(int val, int x, int y, int p_p, std::vector<Ile*> v_p, std::vector<Ile*> v_r, bool est_r):
 _val(val), _abscisse(x), _ordonnee(y), _ponts_places(p_p), _voisins_possibles(v_p), _voisins_reels(v_r), _est_resolu(est_r)
 {}
+
+// Destructeur
+Ile::~Ile() {
+  for (unsigned int i = 0; i < _voisins_possibles.size(); )
+    delete(_voisins_possibles[i]);
+  _voisins_possibles.clear();
+
+  for (unsigned int i = 0; i < _voisins_reels.size(); )
+    delete(_voisins_reels[i]);
+  _voisins_reels.clear();
+  }
 
 // Accesseurs en lecture
 int Ile::getVal() {
@@ -29,11 +41,11 @@ int Ile::getPontsPlaces() {
     return _ponts_places;
 }
 
-std::vector<Ile> Ile::getVoisinsPossibles() {
+std::vector<Ile*> Ile::getVoisinsPossibles() {
     return _voisins_possibles;
 }
 
-std::vector<Ile> Ile::getVoisinsReels() {
+std::vector<Ile*> Ile::getVoisinsReels() {
     return _voisins_reels;
 }
 
@@ -75,31 +87,17 @@ void Ile::setPontsPlaces(int n) {
     _ponts_places = n;
 }
 
-void Ile::setUnVoisinPossible(Ile ile) {
+void Ile::setUnVoisinPossible(Ile* ile) {
     _voisins_possibles.push_back(ile);
 }
 
-void Ile::setUnVoisinPossible(Ile* ile) {
-    _voisins_possibles.push_back(*ile);
-}
-
 void Ile::setEstResolu(bool r) {
-  if (r == true) {
+  if (r == true)
     _est_resolu = r;
-
-    unsigned int i = 0;
-    while (i < _voisins_possibles.size())
-      _voisins_possibles[i].supprimerUneCaseVoisinsPossibles(this);
-      supprimerUneCaseVoisinsPossibles(i);
-  }
-}
-
-void Ile::setUnVoisinReel(Ile ile) {
-    _voisins_reels.push_back(ile);
 }
 
 void Ile::setUnVoisinReel(Ile* ile) {
-    _voisins_reels.push_back(*ile);
+    _voisins_reels.push_back(ile);
 }
 
 void Ile::setHauteur(int h) {
@@ -131,8 +129,8 @@ void Ile::supprimerUneCaseVoisinsPossibles(size_t i){
 
 void Ile::supprimerUneCaseVoisinsPossibles(Ile* ile){
   for (size_t i = 0; i < _voisins_possibles.size(); i++) {
-    if (_voisins_possibles[i].getX() == ile->getX()
-     && _voisins_possibles[i].getY() == ile->getY()) {
+    if (_voisins_possibles[i]->getX() == ile->getX()
+     && _voisins_possibles[i]->getY() == ile->getY()) {
       _voisins_possibles.erase(_voisins_possibles.begin()+i);
     }
   }
@@ -141,7 +139,7 @@ void Ile::supprimerUneCaseVoisinsPossibles(Ile* ile){
 // Vérifie si l'ile existe déjà dans les voisins réels
 bool Ile::dejaVoisin(Ile* ile) {
   for (unsigned int r = 0; r < _voisins_reels.size(); r++) {
-    if (ile == &(_voisins_reels.at(r)))
+    if (ile == _voisins_reels.at(r))
       return true;
   }
 
@@ -151,7 +149,7 @@ bool Ile::dejaVoisin(Ile* ile) {
 // Supprime les iles résolues des voisins possibles
 void Ile::majVoisinsResolus() {
   for (unsigned int i = 0; i < _voisins_possibles.size(); i++)
-    if ( _voisins_possibles[i].getResolu() )
+    if ( _voisins_possibles[i]->getResolu() )
       supprimerUneCaseVoisinsPossibles(i);
 }
 
