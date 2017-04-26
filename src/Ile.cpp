@@ -15,14 +15,10 @@ _val(val), _abscisse(x), _ordonnee(y), _ponts_places(p_p), _voisins_possibles(v_
 
 // Destructeur
 Ile::~Ile() {
-  for (unsigned int i = 0; i < _voisins_possibles.size(); )
-    delete(_voisins_possibles[i]);
-  _voisins_possibles.clear();
-
-  for (unsigned int i = 0; i < _voisins_reels.size(); )
-    delete(_voisins_reels[i]);
   _voisins_reels.clear();
-  }
+  
+  _voisins_possibles.clear();
+}
 
 // Accesseurs en lecture
 int Ile::getVal() {

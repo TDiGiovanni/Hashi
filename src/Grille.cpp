@@ -2,7 +2,9 @@
 #include "../inc/Grille.hpp"
 
 // Constructeur
-Grille::Grille(): _hauteur_max(0), _longueur_max(0), _objets_presents(0), _est_resolu(false), _nbre_composantes_connexes(0), _nb_iles(0), _nb_iles_resolues(0) {}
+Grille::Grille():
+  _hauteur_max(0), _longueur_max(0), _objets_presents(0), _est_resolu(false), _nbre_composantes_connexes(0), _nb_iles(0), _nb_iles_resolues(0)
+{}
 
 // Destructeur
 Grille::~Grille() {
