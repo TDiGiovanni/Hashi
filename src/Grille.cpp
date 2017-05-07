@@ -431,16 +431,16 @@ void Grille::reglesPonts(Ile* ile){
     
     for (size_t i = 0; i < ile->getVoisinsPossibles().size(); i++) {
       ile2 = *(ile->getVoisinsPossibles().at(i));
+
+      // On incrémente le nombre de ponts placés pour les deux iles
+      ile->setPontsPlaces(ile->getPontsPlaces()+2);
+      getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setPontsPlaces(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces()+2);
       
       // Dans la suite, "getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()" correspond à ile2
       creerPont(ile, getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(), 2);
 
       // On met à jour les composantes connexes (si besoin)
       unionComposantesConnexes(ile->getChef(),getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getChef());
-
-      // On incrémente le nombre de ponts placés pour les deux iles
-      ile->setPontsPlaces(ile->getPontsPlaces()+2);
-      getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setPontsPlaces(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces()+2);
 
       // On vérifie si ile2 est "terminée"
       if ( !(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getResolu()) &&
@@ -461,19 +461,19 @@ void Grille::reglesPonts(Ile* ile){
 
       // S'ils sont déjà reliés, on crée un pont double (et on supprime ile des voisins possibles de ile2 et inversément)
       if ( ile->dejaVoisin(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()) ) {
-	creerPont(ile, getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(), 2);
-	ile->setPontsPlaces(ile->getPontsPlaces()+1);
+	       ile->setPontsPlaces(ile->getPontsPlaces()+1);
 	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setPontsPlaces(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces()+1);
+	creerPont(ile, getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(), 2);
 	supprimerUnVoisinPossible(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(),ile);
 	supprimerUnVoisinPossible(ile,getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle());
 	i--; // Décrémentation car on réduit la taille du vecteur de voisins possibles
       }
       // Autrement, on crée un pont simple
       else {
+       	ile->setPontsPlaces(ile->getPontsPlaces()+1);
+	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setPontsPlaces(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces()+1);
 	creerPont(ile, getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle(), 1);
 	unionComposantesConnexes(ile->getChef(),getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getChef());
-	ile->setPontsPlaces(ile->getPontsPlaces()+1);
-	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setPontsPlaces(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces()+1);
       }
 
       // On vérifie si ile2 est "terminée"
@@ -492,12 +492,12 @@ void Grille::reglesPonts(Ile* ile){
     if ( (!(ile->getResolu())) && (unsigned int)(ile->getVal() - ile->getPontsPlaces()) == (ile->getVoisinsPossibles().size()) ) {
       for (size_t i = 0; i< ile->getVoisinsPossibles().size() ; i++) {
 	ile2 = *(ile->getVoisinsPossibles().at(i));
-	
-	creerPont(ile, getUneIleOuUnPont(ile2.getX(), ile2.getY()).getIle(), 2);
 
 	// On incrémente le nombre de ponts placés pour les deux iles
 	ile->setPontsPlaces(ile->getPontsPlaces()+1);
 	getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->setPontsPlaces(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getPontsPlaces()+1);
+
+	creerPont(ile, getUneIleOuUnPont(ile2.getX(), ile2.getY()).getIle(), 2);
 
 	// On vérifie si ile2 est "terminée"
 	if ( !(getUneIleOuUnPont(ile2.getX(),ile2.getY()).getIle()->getResolu()) &&
