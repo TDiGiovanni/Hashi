@@ -2,6 +2,8 @@
 #define _GRILLE_H
 
 #include <string>
+#include <sstream>
+#include <SFML/Graphics.hpp>
 #include "IleOuPont.hpp"
 #include "Pont.hpp"
 
@@ -48,7 +50,8 @@ public:
   void ignoreChars(std::istream&, std::string);
   void lecture(std::istream&); // Reconstruit la grille à partir du fichier
   // Affichage
-  void affichage(std::ostream&) const; // Affichage sur un flux de sortie
+  template<typename T> std::string number_to_string(const T&);
+  void affichage(sf::RenderWindow&, sf::RectangleShape&, sf::CircleShape&, sf::Text&);
 
   // Voisins d'Iles
   void RecupVoisinsPossibles(); // Récupère les voisins possibles de chaque ile
