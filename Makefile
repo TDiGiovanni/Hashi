@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-Wall -std=c++11
+CXXFLAGS=-Wall -D_GLIBCXX_USE_CXX11_ABI=0
 
 SRC=./src
 BUILD=./build
@@ -9,11 +9,11 @@ OBJECTS=$(BUILD)/main.o $(BUILD)/Grille.o $(BUILD)/Ile.o $(BUILD)/IleOuPont.o $(
 
 # Construction du programme final
 Hashi: $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $^ -L./inc/SFML_2.4.2/lib -lsfml-graphics -lsfml-window -lsfml-system -o $@
 
 # Construction de chaque fichier source
 $(OBJECTS): $(BUILD)/%.o: $(SRC)/%.cpp
-	$(CXX) $(CXXFLAGS) -c $^ -o $@
+	$(CXX) $(CXXFLAGS) -c $^ -I./inc/SFML_2.4.2/include -o $@
 
 # Nettoyage du dossier source
 clean:

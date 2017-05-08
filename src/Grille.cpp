@@ -214,54 +214,57 @@ void Grille::lecture(std::istream& in) {
     } while (champ.size());
 }
 
-void Grille::affichage (std::ostream& sortie) const {
-  // Limite du haut
-  sortie << "+";
-  for (size_t i = 1; i <= 2*_longueur_max; i++) {
-      sortie << "-";
-  }
-  sortie<<"+ \n";
-  
+template<typename T> std::string Grille::number_to_string(const T &n) {
+  std::ostringstream stream;
+  stream << n;
+  return stream.str();
+}
+
+void Grille::affichage (sf::RenderWindow &window, sf::RectangleShape &rectangle, sf::CircleShape &cercle, sf::Text &texte) {
   for (size_t y = 0; y < _hauteur_max; y++) {
-    sortie<<"|";
     for (size_t x = 0; x < _longueur_max; x++) {
       IleOuPont grille = getUneIleOuUnPont(x,y);
       if (grille.getIle() != NULL) {
-        sortie<<grille.getIle()->getVal()<<" ";
+        cercle.setPosition(10+x*50,10+y*80);
+	texte.setPosition(25+x*50,10+y*80);
+	texte.setString(number_to_string(grille.getIle()->getVal()));
+	window.draw(cercle);
+	window.draw(texte);
       }
       else {
 	if ( grille.getPont() != NULL ) {
 	  if ( grille.getPont()->getNombre() == 1 ) {
 	    if ( !(grille.getPont()->getEstVertical()) ) {
-	      sortie<<"--";
+	      rectangle.setSize(sf::Vector2f(40,10));
+	      rectangle.setPosition(25+x*50,50+y*80);
+	      window.draw(rectangle);
 	    }
 	    else {
-	      sortie<<"| ";
+	      rectangle.setSize(sf::Vector2f(10,40));
+	      rectangle.setPosition(10+x*50,10+y*80);
+	      window.draw(rectangle);
 	    }
 	  }
 	  else {
 	    if ( !(grille.getPont()->getEstVertical()) ) {
-	      sortie<<"==";
+	      rectangle.setSize(sf::Vector2f(40,10));
+	      rectangle.setPosition(10+x*50,10+y*75);
+	      window.draw(rectangle);
+	      rectangle.setPosition(10+x*50,10+y*85);
+	      window.draw(rectangle);
 	    }
 	    else {
-	      sortie<<"||";
+	      rectangle.setSize(sf::Vector2f(10,40));
+	      rectangle.setPosition(35+x*45,10+y*80);
+	      window.draw(rectangle);
+	      rectangle.setPosition(45+x*55,10+y*80);
+	      window.draw(rectangle);
 	    }
 	  }
 	}
-	else {
-	  sortie<<". ";
-	}
       }
     }
-    sortie<<"| \n";
   }
-
-  // Limite du bas
-  sortie<<"+";
-  for (size_t i = 1; i <= 2*_longueur_max; i++) {
-    sortie << "-";
-  }
-  sortie<<"+ \n";
 }
 
 // Méthode pour récupérer les voisins possibles de chaque ile
