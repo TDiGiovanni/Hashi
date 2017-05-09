@@ -1,5 +1,5 @@
 # Hashiwokakero
 
-Penser à décompresser la SFML dans le dossier "inc".  
-Ajouter les éventuels nouveaux fichiers textes dans le dossier "build".  
+Décompresser la SFML dans le dossier "inc".  
+Ajouter le fichier texte contenant la grille dans le dossier "build".  
 Lancer "UseThis.sh" dans un terminal.

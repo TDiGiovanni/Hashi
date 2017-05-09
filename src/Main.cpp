@@ -4,12 +4,12 @@
 
 int main(int argc, char const *argv[]) {
   // SFML
-  sf::RenderWindow window(sf::VideoMode(800, 600), "Hashiwokakero");
+  sf::RenderWindow window(sf::VideoMode(900, 700), "Hashiwokakero");
   sf::RectangleShape rectangle;
   sf::CircleShape cercle(30.f);
   sf::Text texte;
   sf::Font police;
-  police.loadFromFile("./inc/SFML_2.4.2/IntroRustG-Base2Line.otf");
+  police.loadFromFile("../inc/SFML_2.4.2/IntroRustG-Base2Line.otf");
   texte.setFont(police);
   texte.setCharacterSize(50);
   texte.setFillColor(sf::Color::White);

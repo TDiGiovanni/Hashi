@@ -225,8 +225,8 @@ void Grille::affichage (sf::RenderWindow &window, sf::RectangleShape &rectangle,
     for (size_t x = 0; x < _longueur_max; x++) {
       IleOuPont grille = getUneIleOuUnPont(x,y);
       if (grille.getIle() != NULL) {
-        cercle.setPosition(10+x*50,10+y*80);
-	texte.setPosition(25+x*50,10+y*80);
+        cercle.setPosition(10+x*60,10+y*90);
+	texte.setPosition(25+x*60,10+y*90);
 	texte.setString(number_to_string(grille.getIle()->getVal()));
 	window.draw(cercle);
 	window.draw(texte);
@@ -236,28 +236,28 @@ void Grille::affichage (sf::RenderWindow &window, sf::RectangleShape &rectangle,
 	  if ( grille.getPont()->getNombre() == 1 ) {
 	    if ( !(grille.getPont()->getEstVertical()) ) {
 	      rectangle.setSize(sf::Vector2f(40,10));
-	      rectangle.setPosition(25+x*50,50+y*80);
+	      rectangle.setPosition(20+x*60,35+y*90);
 	      window.draw(rectangle);
 	    }
 	    else {
-	      rectangle.setSize(sf::Vector2f(10,40));
-	      rectangle.setPosition(10+x*50,10+y*80);
+	      rectangle.setSize(sf::Vector2f(10,80));
+	      rectangle.setPosition(35+x*60,y*90);
 	      window.draw(rectangle);
 	    }
 	  }
 	  else {
 	    if ( !(grille.getPont()->getEstVertical()) ) {
 	      rectangle.setSize(sf::Vector2f(40,10));
-	      rectangle.setPosition(10+x*50,10+y*75);
+	      rectangle.setPosition(20+x*60,25+y*90);
 	      window.draw(rectangle);
-	      rectangle.setPosition(10+x*50,10+y*85);
+	      rectangle.setPosition(20+x*60,45+y*90);
 	      window.draw(rectangle);
 	    }
 	    else {
-	      rectangle.setSize(sf::Vector2f(10,40));
-	      rectangle.setPosition(35+x*45,10+y*80);
+	      rectangle.setSize(sf::Vector2f(10,80));
+	      rectangle.setPosition(25+x*60,y*90);
 	      window.draw(rectangle);
-	      rectangle.setPosition(45+x*55,10+y*80);
+	      rectangle.setPosition(45+x*60,y*90);
 	      window.draw(rectangle);
 	    }
 	  }
